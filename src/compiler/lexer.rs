@@ -174,6 +174,9 @@ pub enum Token {
 
     #[token(":")]
     Colon,
+
+    #[token("#")]
+    HashTag,
     /*
 
        Keywords
@@ -260,17 +263,16 @@ pub enum Token {
      * do it.
      */
 
-    #[regex(r"[a-zA-Z_]+", priority = 4)]
-    #[regex(r"[a-zA-Z_][a-zA-Z0-9_]+", priority = 3)]
+    #[regex(r"[a-zA-Z_][a-zA-Z0-9_]*", priority = 3)]
     Identifier,
 
     #[regex(r"0[xX][0-9a-fA-F]+", priority = 2)]
     Hexadecimal,
 
-    #[regex(r"\d+", priority = 1)]
-    #[regex(r"\d+\.", priority = 1)]
-    #[regex(r"\.\d+", priority = 1)]
-    #[regex(r"\d+\.\d+", priority = 1)]
+    #[regex(r"[+-]?\d+", priority = 1)]
+    #[regex(r"[+-]?\d+\.", priority = 1)]
+    #[regex(r"[+-]?\.\d+", priority = 1)]
+    #[regex(r"[+-]?\d+\.\d+", priority = 1)]
     Number,
 }
 
@@ -312,6 +314,11 @@ mod test {
         12.
         12345.6789
         .45
+        +2
+        -2
+        +.1
+        +2.1
+        -.5
         ",
         ) {
             assert_eq!(result, Ok(Token::Number));
